@@ -51,7 +51,7 @@ public class UserRepositoryImpl implements UserRepository  {
     public User getUserById(long userId) {
         log.debug("getUserById({})", userId);
         if (!users.containsKey(userId)) {
-            throw new NotFoundException("Пользвоателя с id - {} не существует");
+            throw new NotFoundException("Пользвоатель не существует");
         }
 
         log.debug("Пользоваетль возвращен");

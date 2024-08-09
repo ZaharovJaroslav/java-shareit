@@ -3,7 +3,7 @@ package ru.practicum.shareit.user;
 import java.util.Collection;
 import java.util.Optional;
 
-interface UserRepository {
+public interface UserRepository {
     Collection<User> getUsers();
     User saveUser(User user);
     void deleteUserById(long userId);
