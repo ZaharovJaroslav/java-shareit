@@ -8,7 +8,11 @@ import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserService;
+
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +26,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto addNewItem(long itemId, Item item) {
         log.debug("addNewItem({}, {})", itemId,item);
         itemValidation(item);
-        userService.getUserById(itemId);
+        item.setOwner(userService.getUserById(itemId));
 
         return ItemDto.toItemDto(repository.saveItem(item)) ;
 
@@ -36,9 +40,9 @@ public class ItemServiceImpl implements ItemService {
         if (item.getDescription() == null || item.getDescription().isBlank()) {
             throw new NotFoundException("Описание инстумента не задано");
         }
-        if (!item.isAvailable()) {
-            throw new NotFoundException("При добавлении нового инстумента он должен быть доступен");
-        }
+//        if (!item.isAvailable()) {
+//            throw new NotFoundException("При добавлении нового инстумента он должен быть доступен");
+//        }
     }
 
     @Override
@@ -48,12 +52,19 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto getItemById(long itemId) {
-        return null;
+        return ItemDto.toItemDto(repository.getItemById(itemId));
     }
 
     @Override
-    public ItemDto getAllItemsUser(long UserId) {
-        return null;
+    public Collection<ItemDto> getAllItemsUser(long userId) {
+        log.debug("getAllItemsUser({})", userId);
+        User item = userService.getUserById(userId);
+        /*return repository.getAllItemsUser(userId).stream()
+                   .map(ItemDto::toItemDto)
+                   .collect(Collectors.toList());*/
+        return repository.getAllItemsUser(userId).stream()
+                .map(ItemDto::toItemDto)
+                .collect(Collectors.toList());
     }
 
     @Override

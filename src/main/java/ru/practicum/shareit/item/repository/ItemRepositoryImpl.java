@@ -8,8 +8,10 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Repository
@@ -30,6 +32,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public Item saveItem(Item item) {
+        log.debug("saveItem({})", item);
         generationNextId();
         item.setId(id);
         items.put(id,item);
@@ -53,8 +56,11 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public Item getAllItemsUser(long UserId) {
-        return null;
+    public Collection<Item> getAllItemsUser(long userId) {
+        log.debug("getAllItemsUser({})", userId);
+        return items.values().stream()
+                .filter(item -> item.getOwner().getId() == userId)
+                .collect(Collectors.toList());
     }
 
     @Override
