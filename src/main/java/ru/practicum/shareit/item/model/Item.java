@@ -17,6 +17,4 @@ public class Item {
     boolean available;
     User owner;
     ItemRequest request;
-
-
 }

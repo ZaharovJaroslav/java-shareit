@@ -7,8 +7,8 @@ import java.util.Collection;
 
 public interface ItemRepository {
     Item saveItem(Item item);
-    Item updateItem(long itemId, Item item);
+    Item updateItem(Item item);
     Item getItemById(long itemId);
     Collection<Item> getAllItemsUser(long UserId);
-    Item findItemByNameOrDescription(String text);
+    Collection<Item> findItemByNameOrDescription(String text);
 }

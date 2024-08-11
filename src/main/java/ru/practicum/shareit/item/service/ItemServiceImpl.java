@@ -4,11 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.ValidationException;
+import ru.practicum.shareit.item.UpdateItemRequest;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.User;
+o;
 import ru.practicum.shareit.user.UserService;
 
 import java.util.Collection;
@@ -46,8 +48,14 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto updateItem(long itemId, Item item) {
-        return null;
+    public ItemDto updateItem(long itemId, long userId, UpdateItemRequest request) {
+        Item updatedItem = repository.getItemById(itemId);
+        if (updatedItem.getOwner().getId() != userId) {
+            throw new NotFoundException("у пользователя нет такоего иснтумента");
+        }
+
+        updatedItem = repository.updateItem(ItemMapper.updateItemFields(updatedItem, request));
+        return ItemDto.toItemDto(updatedItem);
     }
 
     @Override
@@ -68,8 +76,10 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto findItemByNameOrDescription(String text) {
-        return null;
+    public Collection<ItemDto> findItemByNameOrDescription(String text) {
+        return repository.findItemByNameOrDescription(text).stream()
+                .map(ItemDto::toItemDto)
+                .collect(Collectors.toList());
     }
 }
 

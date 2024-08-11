@@ -41,8 +41,8 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public Item updateItem(long itemId, Item item) {
-        return null;
+    public Item updateItem(Item item) {
+        return  getItemById(item.getId());
     }
 
     @Override
@@ -64,7 +64,11 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public Item findItemByNameOrDescription(String text) {
-        return null;
+    public Collection<Item> findItemByNameOrDescription(String text) {
+        return items.values().stream()
+                .filter(item -> item.getName().toLowerCase().contains(text)
+                        || item.getDescription().toLowerCase().contains(text))
+                .filter(Item::isAvailable)
+                .collect(Collectors.toList());
     }
 }
