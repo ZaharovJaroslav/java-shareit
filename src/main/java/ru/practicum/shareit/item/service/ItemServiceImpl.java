@@ -31,13 +31,12 @@ public class ItemServiceImpl implements ItemService {
         User user = userService.getUserById(itemId);
         item.setOwner(user);
 
-        return ItemDto.toItemDto(repository.saveItem(item)) ;
-
+        return ItemDto.toItemDto(repository.saveItem(item));
     }
 
     public void itemValidation(Item item) {
         log.info("itemValidation({})", item);
-        if ( item.getAvailable() == null) {
+        if (item.getAvailable() == null) {
             throw new ValidationException("При добавлении нового инстумента он должен быть доступен");
         }
         if (item.getName() == null || item.getName().isBlank()) {

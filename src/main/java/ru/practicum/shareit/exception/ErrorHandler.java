@@ -8,7 +8,7 @@ import ru.practicum.shareit.item.controller.ItemController;
 import ru.practicum.shareit.user.controller.UserController;
 
 
-@RestControllerAdvice(assignableTypes = {UserController.class,ItemController.class} )
+@RestControllerAdvice(assignableTypes = {UserController.class,ItemController.class})
 public class ErrorHandler {
 
     @ExceptionHandler

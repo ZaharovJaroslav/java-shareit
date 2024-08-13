@@ -8,9 +8,13 @@ import java.util.Collection;
 
 public interface ItemService {
     ItemDto addNewItem(long itemId, Item item);
+
     ItemDto updateItem(long itemId, long userId, UpdateItemRequest request);
+
     ItemDto getItemById(long itemId);
+
     Collection<ItemDto> getAllItemsUser(long userId);
+
     Collection<ItemDto> findItemByNameOrDescription(String text);
 
 }

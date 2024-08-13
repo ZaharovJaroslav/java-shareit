@@ -11,7 +11,7 @@ import ru.practicum.shareit.item.model.Item;
 public final class ItemMapper {
     public static Item mapToItem(Item item) {
         log.debug("mapToItem({})",item);
-        return new Item (
+        return new Item(
                 item.getId(),
                 item.getName(),
                 item.getDescription(),

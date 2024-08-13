@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User UpdateUser(long userId, UpdateUserRequest request) {
+    public User updateUser(long userId, UpdateUserRequest request) {
         log.debug("UpdateUser({},{})", userId, request);
         if (request.getEmail() != null) {
             checkEmailExist(request.getEmail());
@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
             log.warn("Имя пользователя не задано");
             throw new ValidationException("Имя пользователя не задано");
         }
-        if (user.getEmail() == null|| user.getEmail().isBlank()) {
+        if (user.getEmail() == null || user.getEmail().isBlank()) {
             log.warn("Не указана электронная почта пользоватлея");
             throw new ValidationException("Не указана электронная почта пользоватлея");
         }
@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
 
     private void checkEmailExist(String userEmail) {
         log.debug("Проверка Электронной почты на существование: {}", userEmail);
-        Optional<User> user =  repository.CheckEmailExist(userEmail);
+        Optional<User> user =  repository.checkEmailExist(userEmail);
         if (user.isPresent()) {
             log.warn("Пользователь с электронной почтой - {} уже зарегистрирован", user.get().getEmail());
             throw new ConflictException("Пользователь с электронной почтой уже зарегистрирован");

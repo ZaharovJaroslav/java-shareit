@@ -15,7 +15,7 @@ public final class ItemRequestDto {
     User requestor;
     LocalDateTime created;
 
-    private static ItemRequestDto itemRequestDto (ItemRequest itemRequest) {
+    private static ItemRequestDto itemRequestDto(ItemRequest itemRequest) {
         return new ItemRequestDto(itemRequest.getDescription(),
                                   itemRequest.getRequestor(),
                                   itemRequest.getCreated()

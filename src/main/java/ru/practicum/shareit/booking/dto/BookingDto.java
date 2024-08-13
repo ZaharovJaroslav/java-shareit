@@ -14,7 +14,7 @@ public class BookingDto {
     BookingStatus status;
 
     private static BookingDto toBookingDto(Booking booking) {
-        return new BookingDto (booking.getId(),
+        return new BookingDto(booking.getId(),
                    booking.getItem().getName(),
                    booking.getStatus()
         );

@@ -60,12 +60,12 @@ public class UserController {
 
     @PatchMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public User updateUser(@PathVariable long userId, @RequestBody UpdateUserRequest user) {
-        log.debug("Обновление данных существующего пользователя: {}", user);
-        if (user == null) {
+    public User updateUser(@PathVariable long userId, @RequestBody UpdateUserRequest request) {
+        log.debug("Обновление данных существующего пользователя: {}", request);
+        if (request == null) {
             throw new NotFoundException("Не указан пользователь для обновления");
         }
 
-        return userService.UpdateUser(userId, user);
+        return userService.updateUser(userId, request);
     }
 }

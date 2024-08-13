@@ -21,7 +21,7 @@ public class ItemDto {
 
     public static ItemDto toItemDto(Item item) {
         log.debug("toItemDto({})",item);
-        return new ItemDto (
+        return new ItemDto(
                 item.getId(),
                 item.getName(),
                 item.getDescription(),

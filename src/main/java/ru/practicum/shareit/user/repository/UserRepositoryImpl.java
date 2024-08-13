@@ -68,7 +68,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> CheckEmailExist(String userEmail) {
+    public Optional<User> checkEmailExist(String userEmail) {
        log.debug("CheckEmailExist({})", userEmail);
        return users.values().stream()
                 .filter(user -> user.getEmail().equals(userEmail))
