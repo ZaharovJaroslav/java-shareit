@@ -53,7 +53,7 @@ public class ItemController {
     @GetMapping("/search")
     public Collection<ItemDto> findItemByNameOrDescription(@RequestParam String text) {
         log.debug("Поиск достпуных для аренды документов по названиию и описанию - {}", text);
-        return itemService.findItemByNameOrDescription(text.toLowerCase());
+        return itemService.findItemByNameOrDescription(text);
     }
 
     @PatchMapping("/{itemId}")
