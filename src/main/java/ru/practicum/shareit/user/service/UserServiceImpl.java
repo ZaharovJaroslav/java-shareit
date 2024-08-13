@@ -1,10 +1,14 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.ConflictException;
 import ru.practicum.shareit.exception.ValidationException;
+import ru.practicum.shareit.user.mapper.UserMapper;
+import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.repository.UserRepository;
+import ru.practicum.shareit.user.request.UpdateUserRequest;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -33,7 +37,6 @@ public class UserServiceImpl implements UserService {
         log.debug("addNewUser({})", user);
         validationUser(user);
         return repository.saveUser(user);
-
     }
 
     @Override
@@ -43,28 +46,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User UpdateUser(long userId, User user) {
-        log.debug("UpdateUser({},{})", userId, user);
-        User thisUser = getUserById(userId);
-
-        if (user.getName() == null) {
-            checkEmailExist(user.getEmail());
-            thisUser.setEmail(user.getEmail());
-
-        } else if (user.getEmail() == null) {
-            thisUser.setName(user.getName());
-
-        } else {
-            checkEmailExist(user.getEmail());
-            thisUser.setEmail(user.getEmail());
-            thisUser.setName(user.getName());
+    public User UpdateUser(long userId, UpdateUserRequest request) {
+        log.debug("UpdateUser({},{})", userId, request);
+        if (request.getEmail() != null) {
+            checkEmailExist(request.getEmail());
         }
+        User updatedUser = getUserById(userId);
+        UserMapper.updateUserFields(updatedUser, request);
 
-        return repository.updateUser(thisUser);
+        return repository.updateUser(updatedUser);
     }
 
     private void validationUser(User user) {
-        log.info("Валидация пользователя: {}", user);
+        log.debug("Валидация пользователя: {}", user);
         if (user.getName() == null || user.getName().isBlank()) {
             log.warn("Имя пользователя не задано");
             throw new ValidationException("Имя пользователя не задано");
@@ -81,7 +75,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkEmailExist(String userEmail) {
-        log.info("Проверка Электронной почты на существование: {}", userEmail);
+        log.debug("Проверка Электронной почты на существование: {}", userEmail);
         Optional<User> user =  repository.CheckEmailExist(userEmail);
         if (user.isPresent()) {
             log.warn("Пользователь с электронной почтой - {} уже зарегистрирован", user.get().getEmail());

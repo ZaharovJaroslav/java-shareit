@@ -1,8 +1,9 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.repository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.user.model.User;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,9 +12,9 @@ import java.util.Optional;
 
 @Slf4j
 @Repository
-public class UserRepositoryImpl implements UserRepository  {
+public class UserRepositoryImpl implements UserRepository {
 
-   private final Map<Long,User> users;
+   private final Map<Long, User> users;
    private static long id;
 
    private UserRepositoryImpl() {
@@ -32,7 +33,6 @@ public class UserRepositoryImpl implements UserRepository  {
         if (users.isEmpty()) {
             throw new NotFoundException("Нет существующих пользоватлей");
         }
-        log.debug("Возвращен списко всех пользователей");
         return users.values();
     }
 
@@ -42,8 +42,6 @@ public class UserRepositoryImpl implements UserRepository  {
         generationNextId();
         user.setId(id);
         users.put(id, user);
-
-        log.debug("Новый пользователь {} добавлен", user);
         return getUserById(id);
     }
 
@@ -53,8 +51,6 @@ public class UserRepositoryImpl implements UserRepository  {
         if (!users.containsKey(userId)) {
             throw new NotFoundException("Пользвоатель не существует");
         }
-
-        log.debug("Пользоваетль возвращен");
         return users.get(userId);
     }
 
@@ -63,15 +59,11 @@ public class UserRepositoryImpl implements UserRepository  {
        log.debug("deleteUserById({})", userId);
        getUserById(userId);
        users.remove(userId);
-       log.debug("Пользователь удален");
     }
 
     @Override
     public User updateUser(User user) {
        log.debug("updateUser({})", user);
-     //  users.put(user.getId(), user);
-
-       log.debug("Пользователь {} обновлен",user);
        return getUserById(user.getId());
     }
 

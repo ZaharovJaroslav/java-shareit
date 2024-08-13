@@ -1,13 +1,11 @@
 package ru.practicum.shareit.item.repository;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 
-
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +27,6 @@ public class ItemRepositoryImpl implements ItemRepository {
         log.debug("id = {} ", id);
     }
 
-
     @Override
     public Item saveItem(Item item) {
         log.debug("saveItem({})", item);
@@ -42,7 +39,8 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public Item updateItem(Item item) {
-        return  getItemById(item.getId());
+        log.debug("Item updateItem({})", item);
+        return getItemById(item.getId());
     }
 
     @Override
@@ -65,10 +63,17 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public Collection<Item> findItemByNameOrDescription(String text) {
-        return items.values().stream()
-                .filter(item -> item.getName().toLowerCase().contains(text)
-                        || item.getDescription().toLowerCase().contains(text))
-                .filter(Item::isAvailable)
-                .collect(Collectors.toList());
+        log.debug("findItemByNameOrDescription({})", text);
+        Collection<Item> foundItems = new ArrayList<>();
+        if (text == null || text.isEmpty()) {
+            return foundItems;
+        } else {
+            foundItems = items.values().stream()
+                    .filter(item -> item.getName().toLowerCase().contains(text.toLowerCase())
+                            || item.getDescription().toLowerCase().contains(text))
+                    .filter(Item::getAvailable)
+                    .collect(Collectors.toList());
+        }
+        return foundItems;
     }
 }
