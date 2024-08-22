@@ -38,7 +38,7 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public User addUser(@RequestBody User user) {
-        log.debug("Добавлнеие нового пользователя: {}", user);
+        log.debug("Добавление нового пользователя: {}", user);
         if (user == null) {
             throw new NotFoundException("Не указан пользователь для добавления");
         }
@@ -48,7 +48,7 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public User getUserById(@PathVariable long userId) {
-        log.debug("Получени пользователя по id - {}", userId);
+        log.debug("Получение пользователя по id - {}", userId);
         return userService.getUserById(userId);
     }
 

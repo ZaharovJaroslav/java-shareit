@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -22,7 +23,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     private void generationNextId() {
-        log.debug("Генерация id для нового интсрумента");
+        log.debug("Генерация id для нового инструмента");
         ++id;
         log.debug("id = {} ", id);
     }
@@ -49,8 +50,11 @@ public class ItemRepositoryImpl implements ItemRepository {
         if (!items.containsKey(itemId)) {
             throw new NotFoundException("Инструмента с таким id не существует");
         }
-        return items.get(itemId);
-
+        Optional<Item> item = Optional.ofNullable(items.get(itemId));
+        if (item.isEmpty()) {
+            throw new NotFoundException("Инструмента с таким id не существует");
+        }
+        return item.get();
     }
 
     @Override

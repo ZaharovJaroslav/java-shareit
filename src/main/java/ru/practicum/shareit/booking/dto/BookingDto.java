@@ -9,9 +9,9 @@ import ru.practicum.shareit.booking.BookingStatus;
  */
 @AllArgsConstructor
 public class BookingDto {
-    Long id;
-    String item;
-    BookingStatus status;
+    private Long id;
+    private String item;
+    private BookingStatus status;
 
     private static BookingDto toBookingDto(Booking booking) {
         return new BookingDto(booking.getId(),

@@ -64,8 +64,8 @@ public class UserServiceImpl implements UserService {
             throw new ValidationException("Имя пользователя не задано");
         }
         if (user.getEmail() == null || user.getEmail().isBlank()) {
-            log.warn("Не указана электронная почта пользоватлея");
-            throw new ValidationException("Не указана электронная почта пользоватлея");
+            log.warn("Не указана электронная почта пользователя");
+            throw new ValidationException("Не указана электронная почта пользователя");
         }
         if (!user.getEmail().contains("@")) {
             log.warn("Электронная почта не содержит символ - @: {} ", user.getEmail());

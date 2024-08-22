@@ -31,7 +31,7 @@ public class UserRepositoryImpl implements UserRepository {
     public Collection<User> getUsers() {
        log.debug("getUsers()");
         if (users.isEmpty()) {
-            throw new NotFoundException("Нет существующих пользоватлей");
+            throw new NotFoundException("Нет существующих пользователей");
         }
         return users.values();
     }
@@ -49,9 +49,13 @@ public class UserRepositoryImpl implements UserRepository {
     public User getUserById(long userId) {
         log.debug("getUserById({})", userId);
         if (!users.containsKey(userId)) {
-            throw new NotFoundException("Пользвоатель не существует");
+            throw new NotFoundException("Пользователь не существует");
         }
-        return users.get(userId);
+        Optional<User> user = Optional.ofNullable(users.get(userId));
+        if (users.isEmpty()) {
+            throw new NotFoundException("Пользователя с таким id не существует");
+        }
+        return user.get();
     }
 
     @Override

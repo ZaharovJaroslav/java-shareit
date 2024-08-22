@@ -28,9 +28,4 @@ public class ErrorHandler {
     public ErrorResponse handleConflictException(final ConflictException e) {
         return  new ErrorResponse("Конфликт данных", e.getMessage());
     }
-
-
-
-
-
 }

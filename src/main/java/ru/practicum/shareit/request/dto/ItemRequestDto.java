@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
  */
 @AllArgsConstructor
 public final class ItemRequestDto {
-    String description;
-    User requestor;
-    LocalDateTime created;
+    private String description;
+    private User requestor;
+    private LocalDateTime created;
 
     private static ItemRequestDto itemRequestDto(ItemRequest itemRequest) {
         return new ItemRequestDto(itemRequest.getDescription(),

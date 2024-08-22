@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.request.UpdateItemRequest;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.dto.ItemDTO;
 import ru.practicum.shareit.item.service.ItemService;
 
 import java.util.Collection;
@@ -30,9 +29,9 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping
-    public ItemDto addNewItem(@RequestHeader("X-Sharer-User-Id") Long userId,
-                              @RequestBody Item item) {
-        log.debug("Добавление нового инструмента для пользвоателя с id - {}, {}", userId,item);
+    public ItemDTO addNewItem(@RequestHeader("X-Sharer-User-Id") Long userId,
+                              @RequestBody ItemDTO item) {
+        log.debug("Добавление нового инструмента для пользователя с id - {}, {}", userId,item);
         if (item == null) {
             throw new NotFoundException("Не указан инструмент для добавления");
         }
@@ -40,25 +39,25 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getItemById(@PathVariable Long itemId) {
+    public ItemDTO getItemById(@PathVariable Long itemId) {
         log.debug("Получение инструмента по id - {}",itemId);
         return itemService.getItemById(itemId);
     }
 
     @GetMapping
-    public Collection<ItemDto> getAllItemsUser(@RequestHeader("X-Sharer-User-Id") Long userId) {
+    public Collection<ItemDTO> getAllItemsUser(@RequestHeader("X-Sharer-User-Id") Long userId) {
         log.debug("Получить все инструменты пользователя с id - {} для сдачи в аренду", userId);
         return itemService.getAllItemsUser(userId);
     }
 
     @GetMapping("/search")
-    public Collection<ItemDto> findItemByNameOrDescription(@RequestParam String text) {
-        log.debug("Поиск достпуных для аренды документов по названиию и описанию - {}", text);
+    public Collection<ItemDTO> findItemByNameOrDescription(@RequestParam String text) {
+        log.debug("Поиск достпуных для аренды документов по названию и описанию - {}", text);
         return itemService.findItemByNameOrDescription(text);
     }
 
     @PatchMapping("/{itemId}")
-    public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") Long userId,
+    public ItemDTO updateItem(@RequestHeader("X-Sharer-User-Id") Long userId,
                               @RequestBody UpdateItemRequest request,
                               @PathVariable Long itemId) {
         log.debug("Обновление инструмента пользователя - {}, {}", request, itemId);
