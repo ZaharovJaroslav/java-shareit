@@ -23,7 +23,7 @@ public class Item {
         this.name = name;
         this.description = description;
         this.available = available;
-
     }
+
 }
 

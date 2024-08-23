@@ -29,32 +29,27 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public Item saveItem(Item item) {
+    public long saveItem(Item item) {
         log.debug("saveItem({})", item);
         generationNextId();
         item.setId(id);
         items.put(id,item);
 
-        return getItemById(item.getId());
+        return id;
     }
 
     @Override
-    public Item updateItem(Item item) {
+    public void updateItem(Item item) {
         log.debug("Item updateItem({})", item);
-        return getItemById(item.getId());
     }
 
     @Override
-    public Item getItemById(long itemId) {
+    public Optional<Item> getItemById(long itemId) {
         log.debug("getItemById({})", itemId);
         if (!items.containsKey(itemId)) {
             throw new NotFoundException("Инструмента с таким id не существует");
         }
-        Optional<Item> item = Optional.ofNullable(items.get(itemId));
-        if (item.isEmpty()) {
-            throw new NotFoundException("Инструмента с таким id не существует");
-        }
-        return item.get();
+        return Optional.of(items.get(itemId));
     }
 
     @Override

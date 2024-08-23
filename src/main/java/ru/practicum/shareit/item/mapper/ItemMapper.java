@@ -11,6 +11,7 @@ import ru.practicum.shareit.item.model.Item;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ItemMapper {
 
+
     public static Item mapToItem(ItemDTO item) {
         log.debug("mapToItem({})",item);
         return new Item(

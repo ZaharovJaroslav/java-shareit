@@ -14,6 +14,7 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,15 +26,15 @@ public class ItemServiceImpl implements ItemService {
 
 
     @Override
-    public ItemDTO addNewItem(long itemId, ItemDTO item) {
-        log.debug("addNewItem({}, {})", itemId,item);
+    public ItemDTO addNewItem(long userId, ItemDTO item) {
+        log.debug("addNewItem({}, {})", userId,item);
         itemValidation(item);
-        User user = userService.getUserById(itemId);
+        User user = userService.getUserById(userId);
 
         Item newItem = ItemMapper.mapToItem(item);
         newItem.setOwner(user);
 
-        return ItemMapper.toItemDTO(repository.saveItem(newItem));
+        return getItemById(repository.saveItem(newItem));
     }
 
     public void itemValidation(ItemDTO item) {
@@ -53,19 +54,26 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDTO updateItem(long itemId, long userId, UpdateItemRequest request) {
         log.debug("updateItem({}, {}, {})",itemId, userId, request);
-        Item updatedItem = repository.getItemById(itemId);
+        Item updatedItem = repository.getItemById(itemId)
+                .orElseThrow(() -> new NotFoundException("инструмент не найден"));
         if (updatedItem.getOwner().getId() != userId) {
-            throw new NotFoundException("У пользователя нет такого иснтрумента");
+            throw new NotFoundException("У пользователя нет такого инcтрумента");
         }
-        updatedItem = repository.updateItem(ItemMapper.updateItemFields(updatedItem, request));
+        ItemMapper.updateItemFields(updatedItem, request);
 
-        return ItemMapper.toItemDTO(updatedItem);
+        return getItemById(updatedItem.getId());
     }
 
     @Override
     public ItemDTO getItemById(long itemId) {
         log.debug("getItemById({})", itemId);
-        return ItemMapper.toItemDTO(repository.getItemById(itemId));
+
+        Optional<Item> item = repository.getItemById(itemId);
+        if (item.isEmpty()) {
+            throw new NotFoundException("Инструмента с таким id не существует");
+        }
+
+        return ItemMapper.toItemDTO(item.get());
     }
 
     @Override

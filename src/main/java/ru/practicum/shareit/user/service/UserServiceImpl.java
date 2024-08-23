@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.ConflictException;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -29,14 +30,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(long userId) {
         log.debug("getUserById({})", userId);
-        return repository.getUserById(userId);
+        Optional<User> user = repository.getUserById(userId);
+        if (user.isEmpty()) {
+            throw new NotFoundException("Пользователя с таким id не существует");
+        }
+        return user.get();
     }
 
     @Override
     public User addNewUser(User user) {
         log.debug("addNewUser({})", user);
         validationUser(user);
-        return repository.saveUser(user);
+        repository.saveUser(user);
+
+        return getUserById(repository.saveUser(user));
     }
 
     @Override
@@ -54,7 +61,7 @@ public class UserServiceImpl implements UserService {
         User updatedUser = getUserById(userId);
         UserMapper.updateUserFields(updatedUser, request);
 
-        return repository.updateUser(updatedUser);
+        return updatedUser;
     }
 
     private void validationUser(User user) {

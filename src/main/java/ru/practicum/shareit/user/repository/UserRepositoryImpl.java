@@ -37,25 +37,21 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User saveUser(User user) {
+    public long saveUser(User user) {
         log.debug("saveUser({})", user);
         generationNextId();
         user.setId(id);
         users.put(id, user);
-        return getUserById(id);
+        return id;
     }
 
     @Override
-    public User getUserById(long userId) {
+    public Optional<User> getUserById(long userId) {
         log.debug("getUserById({})", userId);
         if (!users.containsKey(userId)) {
             throw new NotFoundException("Пользователь не существует");
         }
-        Optional<User> user = Optional.ofNullable(users.get(userId));
-        if (users.isEmpty()) {
-            throw new NotFoundException("Пользователя с таким id не существует");
-        }
-        return user.get();
+        return Optional.of(users.get(userId));
     }
 
     @Override
@@ -66,9 +62,8 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User updateUser(User user) {
+    public void updateUser(User user) {
        log.debug("updateUser({})", user);
-       return getUserById(user.getId());
     }
 
     @Override

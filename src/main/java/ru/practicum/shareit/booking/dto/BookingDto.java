@@ -19,6 +19,4 @@ public class BookingDto {
                    booking.getStatus()
         );
     }
-
-
 }
