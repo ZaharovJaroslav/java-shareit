@@ -44,11 +44,11 @@ public class ItemController {
         return itemService.getItemById(itemId);
     }
 
-    @GetMapping
+ /*   @GetMapping
     public Collection<ItemDTO> getAllItemsUser(@RequestHeader("X-Sharer-User-Id") Long userId) {
         log.debug("Получить все инструменты пользователя с id - {} для сдачи в аренду", userId);
         return itemService.getAllItemsUser(userId);
-    }
+    }*/
 
     @GetMapping("/search")
     public Collection<ItemDTO> findItemByNameOrDescription(@RequestParam String text) {

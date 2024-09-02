@@ -8,11 +8,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ItemRequestMapper {
 
-    private static ItemRequest mapToItemRequest(ItemRequest itemRequest) {
-        return new ItemRequest(itemRequest.getId(),
-                               itemRequest.getDescription(),
-                               itemRequest.getRequestor(),
-                               LocalDateTime.now()
-        );
-    }
+//    private static ItemRequest mapToItemRequest(ItemRequest itemRequest) {
+//        return new ItemRequest(itemRequest.getId(),
+//                               itemRequest.getDescription(),
+//                               itemRequest.getRequestor(),
+//                               LocalDateTime.now()
+//        );
+//    }
 }

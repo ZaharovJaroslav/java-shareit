@@ -32,9 +32,10 @@ public class ItemServiceImpl implements ItemService {
         User user = userService.getUserById(userId);
 
         Item newItem = ItemMapper.mapToItem(item);
-        newItem.setOwner(user);
-
-        return getItemById(repository.saveItem(newItem));
+        newItem.setOwnerId(user.getId());
+        repository.save(newItem);
+        return ItemMapper.toItemDTO(newItem);
+      //  return repository.findById(repository.saveItem(newItem));
     }
 
     public void itemValidation(ItemDTO item) {
@@ -54,9 +55,9 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDTO updateItem(long itemId, long userId, UpdateItemRequest request) {
         log.debug("updateItem({}, {}, {})",itemId, userId, request);
-        Item updatedItem = repository.getItemById(itemId)
+        Item updatedItem = repository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("инструмент не найден"));
-        if (updatedItem.getOwner().getId() != userId) {
+        if (updatedItem.getOwnerId() != userId) {
             throw new NotFoundException("У пользователя нет такого инcтрумента");
         }
         ItemMapper.updateItemFields(updatedItem, request);
@@ -68,7 +69,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDTO getItemById(long itemId) {
         log.debug("getItemById({})", itemId);
 
-        Optional<Item> item = repository.getItemById(itemId);
+        Optional<Item> item = repository.findById(itemId);
         if (item.isEmpty()) {
             throw new NotFoundException("Инструмента с таким id не существует");
         }
@@ -77,11 +78,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Collection<ItemDTO> getAllItemsUser(long userId) {
+    public  Collection<ItemDTO> getAllItemsUser(long userId) {
         log.debug("getAllItemsUser({})", userId);
         userService.getUserById(userId);
 
-        return repository.getAllItemsUser(userId).stream()
+        return repository.findAllByOwnerId(userId).stream()
                 .map(ItemMapper::toItemDTO)
                 .collect(Collectors.toList());
     }

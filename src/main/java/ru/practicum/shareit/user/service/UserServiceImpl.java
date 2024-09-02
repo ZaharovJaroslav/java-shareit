@@ -24,13 +24,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public Collection<User> getAllUsers() {
         log.debug("getAllUsers()");
-        return repository.getUsers();
+        return repository.findAll();
     }
 
     @Override
     public User getUserById(long userId) {
         log.debug("getUserById({})", userId);
-        Optional<User> user = repository.getUserById(userId);
+        Optional<User> user = repository.findById(userId);
         if (user.isEmpty()) {
             throw new NotFoundException("Пользователя с таким id не существует");
         }
@@ -41,23 +41,23 @@ public class UserServiceImpl implements UserService {
     public User addNewUser(User user) {
         log.debug("addNewUser({})", user);
         validationUser(user);
-        repository.saveUser(user);
+        repository.save(user);
 
-        return getUserById(repository.saveUser(user));
+        return user;
     }
 
     @Override
     public void deleteUserById(long userId) {
         log.debug("deleteUserById({})", userId);
-        repository.deleteUserById(userId);
+        repository.deleteById(userId);
     }
 
     @Override
     public User updateUser(long userId, UpdateUserRequest request) {
         log.debug("UpdateUser({},{})", userId, request);
-        if (request.getEmail() != null) {
+        /*    if (request.getEmail() != null) {
             checkEmailExist(request.getEmail());
-        }
+        }*/
         User updatedUser = getUserById(userId);
         UserMapper.updateUserFields(updatedUser, request);
 
@@ -78,15 +78,15 @@ public class UserServiceImpl implements UserService {
             log.warn("Электронная почта не содержит символ - @: {} ", user.getEmail());
             throw new ValidationException("Электронная почта не содержит символ - @");
         }
-        checkEmailExist(user.getEmail());
+        //checkEmailExist(user.getEmail());
     }
 
-    private void checkEmailExist(String userEmail) {
+/*    private void checkEmailExist(String userEmail) {
         log.debug("Проверка Электронной почты на существование: {}", userEmail);
         Optional<User> user =  repository.checkEmailExist(userEmail);
         if (user.isPresent()) {
             log.warn("Пользователь с электронной почтой - {} уже зарегистрирован", user.get().getEmail());
             throw new ConflictException("Пользователь с электронной почтой уже зарегистрирован");
         }
-    }
+    }*/
 }

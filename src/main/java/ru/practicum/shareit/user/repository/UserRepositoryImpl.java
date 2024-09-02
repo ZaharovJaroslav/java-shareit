@@ -1,3 +1,4 @@
+/*
 package ru.practicum.shareit.user.repository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -74,3 +75,4 @@ public class UserRepositoryImpl implements UserRepository {
                 .findFirst();
     }
 }
+*/
