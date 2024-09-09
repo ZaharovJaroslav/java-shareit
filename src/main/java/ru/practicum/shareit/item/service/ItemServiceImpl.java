@@ -1,9 +1,11 @@
 package ru.practicum.shareit.item.service;
 
 import jakarta.validation.ValidationException;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.request.UpdateItemRequest;
 import ru.practicum.shareit.item.dto.ItemDTO;
@@ -14,6 +16,7 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -62,19 +65,24 @@ public class ItemServiceImpl implements ItemService {
         }
         ItemMapper.updateItemFields(updatedItem, request);
 
-        return getItemById(updatedItem.getId());
+        return ItemMapper.toItemDTO(repository.findById(itemId).get());
     }
 
     @Override
-    public ItemDTO getItemById(long itemId) {
+    public Item getItemById(long itemId) {
         log.debug("getItemById({})", itemId);
+       // ItemDTO result;
 
-        Optional<Item> item = repository.findById(itemId);
-        if (item.isEmpty()) {
-            throw new NotFoundException("Инструмента с таким id не существует");
-        }
+        Item item = repository.findById(itemId)
+                .orElseThrow(()-> new NotFoundException("Инструмента с таким id не существует"));
 
-        return ItemMapper.toItemDTO(item.get());
+
+
+      //  result = ItemMapper.toItemDTO(item);
+        //return item;
+return item;
+
+      //  return result;
     }
 
     @Override
@@ -94,6 +102,12 @@ public class ItemServiceImpl implements ItemService {
         return repository.findItemByNameOrDescription(text).stream()
                 .map(ItemMapper::toItemDTO)
                 .collect(Collectors.toList());
+    }
+    @Override
+    public Long findOwnerId(Long itemId) {
+        return repository.findById(itemId)
+                .orElseThrow(() -> new NotFoundException(String.format("Item with ID = %d not found.", itemId)))
+                .getOwnerId();
     }
 }
 

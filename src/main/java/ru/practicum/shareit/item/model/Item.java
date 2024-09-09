@@ -8,11 +8,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
@@ -24,6 +27,7 @@ import ru.practicum.shareit.user.model.User;
 @Table(name = "items")
 @Getter @Setter @ToString
 @AllArgsConstructor
+@NoArgsConstructor
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,10 +49,25 @@ public class Item {
     @JoinColumn(name = "request_id")
     private ItemRequest request;
 
-    public Item(String name, String description, Boolean available) {
+    private Booking lastBooking;
+    private Booking nextBooking;
+
+
+ /*   public Item(String name, String description, Boolean available) {
         this.name = name;
         this.description = description;
         this.available = available;
+    }*/
+
+    public Item(Long id, String name, String description, Boolean available) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.available = available;
+
+
     }
+
+
 }
 

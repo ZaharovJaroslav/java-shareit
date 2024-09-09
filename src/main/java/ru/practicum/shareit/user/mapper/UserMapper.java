@@ -1,14 +1,22 @@
 package ru.practicum.shareit.user.mapper;
 
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.request.UpdateUserRequest;
 
+
 @Slf4j
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserMapper {
+
+    public static UserDto toUserDto(User user) {
+        return  new UserDto(user.getId(),
+                            user.getName(),
+                            user.getEmail());
+    }
 
     public static User updateUserFields(User user, UpdateUserRequest request) {
         log.debug("updateUserFields({}, {})", user, request);

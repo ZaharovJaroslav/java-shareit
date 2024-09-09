@@ -15,11 +15,15 @@ public final class ItemMapper {
     public static Item mapToItem(ItemDTO item) {
         log.debug("mapToItem({})",item);
         return new Item(
+                item.getId(),
                 item.getName(),
                 item.getDescription(),
                 item.getAvailable()
         );
     }
+
+
+
 
     public static ItemDTO toItemDTO(Item item) {
         log.debug("toItemDto({})",item);

@@ -38,11 +38,11 @@ public class ItemController {
         return itemService.addNewItem(userId,item);
     }
 
-    @GetMapping("/{itemId}")
+ /*   @GetMapping("/{itemId}")
     public ItemDTO getItemById(@PathVariable Long itemId) {
         log.debug("Получение инструмента по id - {}",itemId);
         return itemService.getItemById(itemId);
-    }
+    }*/
 
  /*   @GetMapping
     public Collection<ItemDTO> getAllItemsUser(@RequestHeader("X-Sharer-User-Id") Long userId) {
