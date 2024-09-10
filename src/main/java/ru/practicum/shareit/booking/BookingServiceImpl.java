@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking;
 
 import ch.qos.logback.core.net.ObjectWriter;
+import jakarta.validation.ValidationException;
 import lombok.AllArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -67,28 +68,28 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-
+    @Transactional
     @Override
-    public BookingDto findBookingById(Long bookingId, Long userId) {
+    public BookingDto findBookingById(Long userId, Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException(("Бронирование с id =" + bookingId + "не найдено")));
         if (booking.getBooker().getId().equals(userId) || booking.getItem().getOwnerId().equals(userId)) {
             return BookingMapper.toBookingDto(booking);
         } else {
-            throw new OperationAccessException("Пользователь с id =" + userId + "не является владельцем");
+            throw new ValidationException("Пользователь с id =" + userId + "не является владельцем");
         }
     }
 
-    @Override
+ /*   @Override
     public BookingDto findByOwnerId(Long ownerId) {
         return BookingMapper.toBookingDto(bookingRepository.findByOwnerId(ownerId));
 
-    }
+    }*/
 
     @Transactional
     @Override
-    public BookingDto approve(long bookingId, long userId, Boolean approve) {
-        BookingDto booking = findBookingById(bookingId, userId);
+    public BookingDto approve(long userId, long bookingId, Boolean approve) {
+        BookingDto booking = findBookingById(userId, bookingId);
 
         Long ownerId = itemService.findOwnerId(booking.getItem().getId());
         if (ownerId.equals(userId)

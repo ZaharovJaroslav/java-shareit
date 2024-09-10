@@ -43,7 +43,7 @@ public class BookingController {
                               @PathVariable Long bookingId,
                               @RequestParam Boolean approved) {
         log.debug("Одобрение бронирования инструмента Арендодателем");
-        return bookingService.approve(bookingId,userId,approved);
+        return bookingService.approve(userId,bookingId,approved);
     }
 
     @GetMapping("/{bookingId}")

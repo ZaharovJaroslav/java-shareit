@@ -3,10 +3,12 @@ package ru.practicum.shareit.item.mapper;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import ru.practicum.shareit.item.dto.ItemDTO;
 import ru.practicum.shareit.item.request.UpdateItemRequest;
 import ru.practicum.shareit.item.model.Item;
 
+@Component
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ItemMapper {
@@ -23,17 +25,13 @@ public final class ItemMapper {
     }
 
 
-
-
-    public static ItemDTO toItemDTO(Item item) {
-        log.debug("toItemDto({})",item);
-        return new ItemDTO(
-                item.getId(),
-                item.getName(),
-                item.getDescription(),
-                item.getAvailable(),
-                item.getRequest() != null ? item.getRequest().getId() : null
-        );
+    public static ItemDTO toItemDto(Item item) {
+        return ItemDTO.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.getAvailable())
+                .build();
     }
 
     public static Item updateItemFields(Item item, UpdateItemRequest request) {

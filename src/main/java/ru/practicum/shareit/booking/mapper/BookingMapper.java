@@ -5,15 +5,16 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.dto.ShortItemBookingDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.user.mapper.UserMapper;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-@Component
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 
+
+@Component
 public final class BookingMapper {
 
     public static BookingDto toBookingDto(Booking booking) {
@@ -22,7 +23,7 @@ public final class BookingMapper {
                 .booker(UserMapper.toUserDto(booking.getBooker()))
                 .start(booking.getStart())
                 .end(booking.getEnd())
-                .item(ItemMapper.toItemDTO(booking.getItem()))
+                .item(ItemMapper.toItemDto(booking.getItem()))
                 .status(booking.getStatus())
                 .build();
     }
@@ -33,10 +34,12 @@ public final class BookingMapper {
                 .collect(Collectors.toList());
     }
 
-
-
-
-
-
-
+    public static ShortItemBookingDto toItemBookingDto(Booking booking) {
+        return ShortItemBookingDto.builder()
+                .id(booking.getId())
+                .bookerId(booking.getBooker().getId())
+                .start(booking.getStart())
+                .end(booking.getEnd())
+                .build();
+    }
 }

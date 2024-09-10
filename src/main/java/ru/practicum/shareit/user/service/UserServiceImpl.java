@@ -55,13 +55,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(long userId, UpdateUserRequest request) {
         log.debug("UpdateUser({},{})", userId, request);
-        /*    if (request.getEmail() != null) {
-            checkEmailExist(request.getEmail());
-        }*/
+
         User updatedUser = getUserById(userId);
+        if (request.getEmail() != null) {
+            updatedUser.setEmail (request.getEmail());
+
+        }
         UserMapper.updateUserFields(updatedUser, request);
 
-        return updatedUser;
+        return repository.save(updatedUser);
     }
 
     private void validationUser(User user) {

@@ -45,12 +45,15 @@ public class Item {
     @Column(name = "owner_id", nullable = false)
     private Long ownerId;
 
+    @Transient
+    private Booking lastBooking;
+
+    @Transient
+    private Booking nextBooking;
+
     @ManyToOne
     @JoinColumn(name = "request_id")
     private ItemRequest request;
-
-    private Booking lastBooking;
-    private Booking nextBooking;
 
 
  /*   public Item(String name, String description, Boolean available) {
