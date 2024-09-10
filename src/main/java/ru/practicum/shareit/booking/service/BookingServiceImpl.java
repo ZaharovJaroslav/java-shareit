@@ -1,30 +1,29 @@
-package ru.practicum.shareit.booking;
+package ru.practicum.shareit.booking.service;
 
-import ch.qos.logback.core.net.ObjectWriter;
 import jakarta.validation.ValidationException;
 import lombok.AllArgsConstructor;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.dto.NewBookingRequestDto;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
-import ru.practicum.shareit.booking.request.NewBookingRequest;
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.model.BookingStatus;
+import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.AlreadyExistsException;
 import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.exception.NotAvailableException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.OperationAccessException;
 import ru.practicum.shareit.exception.TimeDataException;
-import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -32,23 +31,15 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final UserService userService;
     private final ItemService itemService;
-    private final ItemRepository itemRepository;
-    private BookingMapper mapper;
 
     @Override
-    public BookingDto addBooking(long bookerId, NewBookingRequest bookingRequest) {
+    public BookingDto addBooking(long bookerId, NewBookingRequestDto bookingRequest) {
         if (bookingRequest.getEnd().isBefore(bookingRequest.getStart())) {
-            throw new TimeDataException(String.format(
-                    "Дата завершения бронирования: end = %s;" +
-                            " не может быть раньше даты начала бронирования start = %s",
-                    bookingRequest.getEnd(), bookingRequest.getStart()));
+            throw new TimeDataException(
+                    "Дата завершения бронирования не может быть раньше даты начала бронирования");
         }
         User booker = userService.getUserById(bookerId);
-
-         Item item = itemService.getItemById(bookingRequest.getItemId());
-
-
-
+        Item item = itemService.getItemById(bookingRequest.getItemId());
         User owner = userService.getUserById(item.getOwnerId());
         if (owner.getId() == bookerId) {
             throw new OperationAccessException("Арендодатель не может арендовать свой иснтрумент");
@@ -68,7 +59,6 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-    @Transactional
     @Override
     public BookingDto findBookingById(Long userId, Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId)
@@ -80,17 +70,10 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
- /*   @Override
-    public BookingDto findByOwnerId(Long ownerId) {
-        return BookingMapper.toBookingDto(bookingRepository.findByOwnerId(ownerId));
-
-    }*/
-
     @Transactional
     @Override
     public BookingDto approve(long userId, long bookingId, Boolean approve) {
         BookingDto booking = findBookingById(userId, bookingId);
-
         Long ownerId = itemService.findOwnerId(booking.getItem().getId());
         if (ownerId.equals(userId)
                 && booking.getStatus().equals(BookingStatus.APPROVED)) {
@@ -106,6 +89,7 @@ public class BookingServiceImpl implements BookingService {
             booking.setStatus(BookingStatus.REJECTED);
             bookingRepository.save(BookingStatus.REJECTED, bookingId);
         }
+
         return booking;
     }
 
@@ -127,15 +111,13 @@ public class BookingServiceImpl implements BookingService {
             case "REJECTED":
                 BookingMapper.toBookingDto(bookingRepository.findByBookerIdAndStatusIsOrderByStartDesc(userId, BookingStatus.REJECTED));
         }
-        throw new BadRequestException("Введен некоректный запрос");
+        throw new BadRequestException("Введен некорректный запрос");
     }
 
     @Override
     public Collection<BookingDto> findAllBookingsByOwner(long ownerId, String state) {
         userService.getUserById(ownerId);
         LocalDateTime now = LocalDateTime.now();
-
-
         switch (state) {
             case "ALL":
                 return BookingMapper.toBookingDto(bookingRepository.findByItemOwnerId(ownerId));
@@ -150,7 +132,7 @@ public class BookingServiceImpl implements BookingService {
             case "REJECTED":
                 BookingMapper.toBookingDto(bookingRepository.findRejectedBookingsOwner((ownerId), BookingStatus.REJECTED));
         }
-        throw new BadRequestException("Введен некоректный запрос");
+        throw new BadRequestException("Введен некорректный запрос");
 
     }
 }

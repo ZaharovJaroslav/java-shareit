@@ -1,10 +1,11 @@
-package ru.practicum.shareit.booking;
+package ru.practicum.shareit.booking.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.model.BookingStatus;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -12,12 +13,12 @@ import java.util.List;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking,Long> {
+
     @Modifying
     @Query("UPDATE Booking b "
             + "SET b.status = :status  "
             + "WHERE b.id = :bookingId")
     void save(BookingStatus status, Long bookingId);
-
 
     Collection<Booking> findByBookerIdOrderByStartDesc(long id);
 
@@ -40,8 +41,6 @@ public interface BookingRepository extends JpaRepository<Booking,Long> {
             + "WHERE i.ownerId = :ownerId "
             + "ORDER BY b.start DESC")
     Collection<Booking> findByItemOwnerId(Long ownerId);
-
-
     @Query("SELECT b FROM Booking b "
             + "INNER JOIN Item i ON b.item.id = i.id "
             + "WHERE i.ownerId = :ownerId "
@@ -81,7 +80,7 @@ public interface BookingRepository extends JpaRepository<Booking,Long> {
             + "INNER JOIN Item i ON b.item.id = i.id "
             + "WHERE i.id = :itemId "
             + "ORDER BY b.start DESC")
-    List<Booking> findBookingsItem(Long itemId);
+    Collection<Booking> findBookingsItem(Long itemId);
 
     List<Booking> findByItemIdAndBookerIdAndStatusIsAndEndIsBefore(Long itemId,
                                                                    Long bookerId,

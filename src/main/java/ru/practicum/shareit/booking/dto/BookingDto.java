@@ -4,9 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
-import ru.practicum.shareit.booking.Booking;
-import ru.practicum.shareit.booking.BookingStatus;
+import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.item.dto.ItemDTO;
 import ru.practicum.shareit.user.dto.UserDto;
 
@@ -15,7 +13,6 @@ import java.time.LocalDateTime;
 /**
  * TODO Sprint add-bookings.
  */
-@Component
 @Data
 @Builder
 @AllArgsConstructor
@@ -27,5 +24,4 @@ public class BookingDto {
     private ItemDTO item;
     private UserDto booker;
     private BookingStatus status;
-
 }

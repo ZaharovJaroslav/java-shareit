@@ -1,14 +1,12 @@
 package ru.practicum.shareit.item.service;
 
 import jakarta.validation.ValidationException;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.booking.Booking;
-import ru.practicum.shareit.booking.BookingRepository;
-import ru.practicum.shareit.booking.BookingStatus;
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.exception.NotAvailableException;
 import ru.practicum.shareit.exception.NotFoundException;
@@ -31,8 +29,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -99,7 +95,7 @@ public class ItemServiceImpl implements ItemService {
      }
          public ItemDTO updateBookings(ItemDTO itemDto) {
              LocalDateTime now = LocalDateTime.now();
-             List<Booking> bookings = bookingRepository.findBookingsItem(itemDto.getId());
+             Collection<Booking> bookings = bookingRepository.findBookingsItem(itemDto.getId());
              Booking lastBooking = bookings.stream()
                      .filter(obj -> !(obj.getStatus().equals(BookingStatus.REJECTED.REJECTED)))
                      .filter(obj -> obj.getStart().isBefore(now))

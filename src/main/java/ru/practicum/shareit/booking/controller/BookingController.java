@@ -1,7 +1,5 @@
-package ru.practicum.shareit.booking;
+package ru.practicum.shareit.booking.controller;
 
-import jakarta.websocket.server.PathParam;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.request.NewBookingRequest;
+
+import ru.practicum.shareit.booking.dto.NewBookingRequestDto;
 import ru.practicum.shareit.exception.NotFoundException;
 
 import java.util.Collection;
@@ -27,23 +27,24 @@ import java.util.Collection;
 @RequiredArgsConstructor
 @Slf4j
 public class BookingController {
-    private final BookingService bookingService;
+     private final BookingService bookingService;
 
-    @PostMapping
-    public BookingDto addBooking(@RequestHeader("X-Sharer-User-Id") Long userId, @RequestBody NewBookingRequest bookingRequest) {
-      log.debug(" Пользователь: {}, Добавление нового бронирования {}",userId,bookingRequest);
-        if (bookingRequest == null) {
+     @PostMapping
+     public BookingDto addBooking(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                  @RequestBody NewBookingRequestDto bookingRequest) {
+         log.debug("Добавление нового бронирования");
+         if (bookingRequest == null) {
             throw new NotFoundException("Новое бронирование не указано");
-        }
-        return bookingService.addBooking(userId,bookingRequest);
+         }
+         return bookingService.addBooking(userId,bookingRequest);
     }
 
-    @PatchMapping("/{bookingId}")
-    public BookingDto approve(@RequestHeader("X-Sharer-User-Id") Long userId,
-                              @PathVariable Long bookingId,
-                              @RequestParam Boolean approved) {
-        log.debug("Одобрение бронирования инструмента Арендодателем");
-        return bookingService.approve(userId,bookingId,approved);
+     @PatchMapping("/{bookingId}")
+     public BookingDto approve(@RequestHeader("X-Sharer-User-Id") Long userId,
+                               @PathVariable Long bookingId,
+                               @RequestParam Boolean approved) {
+         log.debug("Одобрение бронирования инструмента Арендодателем");
+         return bookingService.approve(userId,bookingId,approved);
     }
 
     @GetMapping("/{bookingId}")
@@ -52,9 +53,6 @@ public class BookingController {
         log.debug("Получение бронирования по id");
         return bookingService.findBookingById(userId, bookingId);
     }
-
-
-
 
     @GetMapping
     public Collection<BookingDto> findAllByUserId(@RequestHeader("X-Sharer-User-Id") Long userId,
