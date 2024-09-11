@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user.request;
+package ru.practicum.shareit.user.model;
 
 import lombok.Data;
 
