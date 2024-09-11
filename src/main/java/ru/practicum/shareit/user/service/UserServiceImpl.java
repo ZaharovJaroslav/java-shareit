@@ -39,9 +39,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User addNewUser(User user) {
         log.debug("addNewUser({})", user);
-       if (userRepository.findByEmailId(user.getEmail()) != null) {
-           throw new NotUniqueEmailException("Пользователь с таким эмейлом уже существует");
-       }
         validationUser(user);
         userRepository.save(user);
 
