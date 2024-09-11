@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exception.NotUniqueEmailException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -38,6 +39,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User addNewUser(User user) {
         log.debug("addNewUser({})", user);
+       if (userRepository.findByEmailId(user.getEmail()) != null) {
+           throw new NotUniqueEmailException("Пользователь с таким эмейлом уже существует");
+       }
         validationUser(user);
         userRepository.save(user);
 
