@@ -3,13 +3,12 @@ package ru.practicum.shareit.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.ConflictException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
-import ru.practicum.shareit.user.request.UpdateUserRequest;
+import ru.practicum.shareit.user.model.UpdateUserRequest;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -17,20 +16,19 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-
 public class UserServiceImpl implements UserService {
-    private final UserRepository repository;
+    private final UserRepository userRepository;
 
     @Override
     public Collection<User> getAllUsers() {
         log.debug("getAllUsers()");
-        return repository.findAll();
+        return userRepository.findAll();
     }
 
     @Override
     public User getUserById(long userId) {
         log.debug("getUserById({})", userId);
-        Optional<User> user = repository.findById(userId);
+        Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty()) {
             throw new NotFoundException("Пользователя с таким id не существует");
         }
@@ -41,7 +39,7 @@ public class UserServiceImpl implements UserService {
     public User addNewUser(User user) {
         log.debug("addNewUser({})", user);
         validationUser(user);
-        repository.save(user);
+        userRepository.save(user);
 
         return user;
     }
@@ -49,21 +47,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserById(long userId) {
         log.debug("deleteUserById({})", userId);
-        repository.deleteById(userId);
+        userRepository.deleteById(userId);
     }
 
     @Override
     public User updateUser(long userId, UpdateUserRequest request) {
         log.debug("UpdateUser({},{})", userId, request);
-
         User updatedUser = getUserById(userId);
         if (request.getEmail() != null) {
-            updatedUser.setEmail (request.getEmail());
-
+            updatedUser.setEmail(request.getEmail());
         }
         UserMapper.updateUserFields(updatedUser, request);
 
-        return repository.save(updatedUser);
+        return userRepository.save(updatedUser);
     }
 
     private void validationUser(User user) {
@@ -80,15 +76,5 @@ public class UserServiceImpl implements UserService {
             log.warn("Электронная почта не содержит символ - @: {} ", user.getEmail());
             throw new ValidationException("Электронная почта не содержит символ - @");
         }
-        //checkEmailExist(user.getEmail());
     }
-
-/*    private void checkEmailExist(String userEmail) {
-        log.debug("Проверка Электронной почты на существование: {}", userEmail);
-        Optional<User> user =  repository.checkEmailExist(userEmail);
-        if (user.isPresent()) {
-            log.warn("Пользователь с электронной почтой - {} уже зарегистрирован", user.get().getEmail());
-            throw new ConflictException("Пользователь с электронной почтой уже зарегистрирован");
-        }
-    }*/
 }

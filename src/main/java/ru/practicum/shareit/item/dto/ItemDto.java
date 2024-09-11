@@ -16,10 +16,11 @@ import java.util.List;
 
 @Slf4j
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class ItemDTO {
+
+public class ItemDto {
     private Long id;
     private String name;
     private String description;

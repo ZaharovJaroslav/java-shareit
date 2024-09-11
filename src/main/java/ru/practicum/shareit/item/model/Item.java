@@ -10,10 +10,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.request.ItemRequest;
 
@@ -23,7 +22,8 @@ import ru.practicum.shareit.request.ItemRequest;
 
 @Entity
 @Table(name = "items")
-@Getter @Setter @ToString
+@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Item {
@@ -53,21 +53,12 @@ public class Item {
     @JoinColumn(name = "request_id")
     private ItemRequest request;
 
-
- /*   public Item(String name, String description, Boolean available) {
-        this.name = name;
-        this.description = description;
-        this.available = available;
-    }*/
-
-    public Item(Long id, String name, String description, Boolean available) {
+/*    public Item(Long id, String name, String description, Boolean available) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.available = available;
-
-
-    }
+    }*/
 
 
 }
