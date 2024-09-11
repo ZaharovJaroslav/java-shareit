@@ -53,11 +53,4 @@ public class ErrorHandler {
     public ErrorResponse handleBadRequestException(final BadRequestException e) {
         return new ErrorResponse("Некорректный запрос", e.getMessage());
     }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleBadRequestException(final  NotUniqueEmailException e) {
-        return new ErrorResponse("Ошибка", e.getMessage());
-    }
-
 }
