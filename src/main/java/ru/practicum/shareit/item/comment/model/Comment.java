@@ -25,7 +25,6 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @RequiredArgsConstructor
-
 public class Comment {
 
     @Id
