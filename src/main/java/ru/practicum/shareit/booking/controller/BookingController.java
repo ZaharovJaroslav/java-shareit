@@ -22,10 +22,10 @@ import java.util.Collection;
 /**
  * TODO Sprint add-bookings.
  */
+@Slf4j
 @RestController
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
-@Slf4j
 public class BookingController {
      private final BookingService bookingService;
 
