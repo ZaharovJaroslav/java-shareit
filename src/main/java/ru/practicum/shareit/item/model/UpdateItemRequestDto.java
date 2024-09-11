@@ -1,9 +1,9 @@
-package ru.practicum.shareit.item.request;
+package ru.practicum.shareit.item.model;
 
 import lombok.Data;
 
 @Data
-public class UpdateItemRequest {
+public class UpdateItemRequestDto {
     private String name;
     private String description;
     private Boolean available;
