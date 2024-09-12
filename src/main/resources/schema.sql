@@ -51,4 +51,3 @@ CREATE TABLE IF NOT EXISTS requests (
     requestor_id BIGINT REFERENCES users (id) ON DELETE CASCADE,
     CONSTRAINT pk_request PRIMARY KEY (id)
 );
-
