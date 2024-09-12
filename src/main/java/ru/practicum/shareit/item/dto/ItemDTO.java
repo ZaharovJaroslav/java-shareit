@@ -19,7 +19,6 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class ItemDto {
     private Long id;
     private String name;
