@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.NewBookingRequestDto;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
+import ru.practicum.shareit.booking.mapper.BookingStatusMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -97,18 +98,19 @@ public class BookingServiceImpl implements BookingService {
     public Collection<BookingDto> findAllByUserId(long userId, String state) {
         userService.getUserById(userId);
         LocalDateTime now = LocalDateTime.now();
-        switch (state) {
-            case "ALL":
+        BookingStatus bookingStatus = BookingStatusMapper.toBookingStatus(state);
+        switch (bookingStatus) {
+            case ALL:
                 return BookingMapper.toBookingDto(bookingRepository.findByBookerIdOrderByStartDesc(userId));
-            case "CURRENT":
+            case CURRENT:
                 return BookingMapper.toBookingDto(bookingRepository.findByBookerIdAndEndIsAfterAndStartIsBeforeOrderByStartDesc(userId, now, now));
-            case "PAST":
+            case PAST:
                 return BookingMapper.toBookingDto(bookingRepository.findByBookerIdAndEndIsBeforeOrderByStartDesc(userId, now));
-            case "FUTURE":
+            case FUTURE:
                 return BookingMapper.toBookingDto(bookingRepository.findByBookerIdAndStartIsAfterOrderByStartDesc(userId, now));
-            case "WAITING":
+            case WAITING:
                 BookingMapper.toBookingDto(bookingRepository.findByBookerIdAndStartIsAfterAndStatusIsOrderByStartDesc(userId, now, BookingStatus.WAITING));
-            case "REJECTED":
+            case REJECTED:
                 BookingMapper.toBookingDto(bookingRepository.findByBookerIdAndStatusIsOrderByStartDesc(userId, BookingStatus.REJECTED));
         }
         throw new BadRequestException("Введен некорректный запрос");
@@ -118,18 +120,19 @@ public class BookingServiceImpl implements BookingService {
     public Collection<BookingDto> findAllBookingsByOwner(long ownerId, String state) {
         userService.getUserById(ownerId);
         LocalDateTime now = LocalDateTime.now();
-        switch (state) {
-            case "ALL":
+        BookingStatus bookingStatus = BookingStatusMapper.toBookingStatus(state);
+        switch (bookingStatus) {
+            case ALL:
                 return BookingMapper.toBookingDto(bookingRepository.findByItemOwnerId(ownerId));
-            case "CURRENT":
+            case CURRENT:
                 return BookingMapper.toBookingDto(bookingRepository.findCurrentBookingsOwner(ownerId, now));
-            case "PAST":
+            case PAST:
                 return BookingMapper.toBookingDto(bookingRepository.findPastBookingsOwner(ownerId, now));
-            case "FUTURE":
+            case FUTURE:
                 return BookingMapper.toBookingDto(bookingRepository.findFutureBookingsOwner(ownerId, now));
-            case "WAITING":
+            case WAITING:
                 BookingMapper.toBookingDto(bookingRepository.findWaitingBookingsOwner(ownerId, now, BookingStatus.WAITING));
-            case "REJECTED":
+            case REJECTED:
                 BookingMapper.toBookingDto(bookingRepository.findRejectedBookingsOwner((ownerId), BookingStatus.REJECTED));
         }
         throw new BadRequestException("Введен некорректный запрос");

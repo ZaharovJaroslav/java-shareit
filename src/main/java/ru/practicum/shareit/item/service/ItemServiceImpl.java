@@ -33,7 +33,6 @@ import java.util.Objects;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository repository;
     private final UserService userService;
@@ -81,18 +80,18 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto findItemById(Long itemId, Long userId) {
-         ItemDto result;
-         Item item = repository.findById(itemId)
-                 .orElseThrow(() -> new NotFoundException("Инструмента id = " + itemId + "не существует"));
-         result = ItemMapper.toItemDto(item);
-         if (Objects.equals(item.getOwnerId(), userId)) {
-             updateBookings(result);
-         }
+        Item item = repository.findById(itemId)
+                .orElseThrow(() -> new NotFoundException("Инструмента id = " + itemId + "не существует"));
+        ItemDto result = ItemMapper.toItemDto(item);
+        if (Objects.equals(item.getOwnerId(), userId)) {
+            updateBookings(result);
+        }
         List<Comment> comments = commentRepository.findAllByItemId(result.getId());
         result.setComments(CommentMapper.toDtoList(comments));
 
         return result;
-     }
+
+    }
 
     public ItemDto updateBookings(ItemDto itemDto) {
         LocalDateTime now = LocalDateTime.now();
@@ -157,7 +156,7 @@ public class ItemServiceImpl implements ItemService {
                 .getOwnerId();
     }
 
-@Override
+    @Override
     public CommentDto addComment(Long itemId, Long userId, CommentDto commentDto) {
         Item item = getItemById(itemId);
         User user = userService.getUserById(userId);

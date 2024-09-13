@@ -45,18 +45,5 @@ public class Item {
 
     @Transient
     private Booking nextBooking;
-
-//    @ManyToOne
-//    @JoinColumn(name = "request_id")
-//    private ItemRequest request;
-
-/*    public Item(Long id, String name, String description, Boolean available) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.available = available;
-    }*/
-
-
 }
 
