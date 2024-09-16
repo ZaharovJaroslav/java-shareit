@@ -21,10 +21,11 @@ public final class ItemMapper {
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
+              //  .itemRequest(item.getId() != null ?  item.)
                 .build();
 
     }
-
+//item.getRequest() != null ? item.getRequest().getId() : null
 
     public static ItemDto toItemDto(Item item) {
         return ItemDto.builder()
@@ -32,6 +33,7 @@ public final class ItemMapper {
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
+
                 .build();
     }
 

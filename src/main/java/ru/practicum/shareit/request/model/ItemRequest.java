@@ -1,4 +1,4 @@
-package ru.practicum.shareit.request;
+package ru.practicum.shareit.request.model;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -9,11 +9,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Collection;
 
 /**
  * TODO Sprint add-item-requests.
@@ -21,21 +27,27 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "requests")
 @Data
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class ItemRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     private String description;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "requester_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "creator_id")
     private User creator;
 
     @Column(name = "created")
-    private LocalDate created;
+    @CreationTimestamp
+    private LocalDateTime created;
+
+    @Transient
+    private Collection<Item> items;
 }
 
 
