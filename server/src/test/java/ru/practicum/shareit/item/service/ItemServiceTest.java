@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
@@ -28,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@ActiveProfiles("test")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 class ItemServiceTest {
     private final ItemService itemService;

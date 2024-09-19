@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
@@ -29,6 +30,7 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@ActiveProfiles("test")
 class ItemServiceImplTest {
 
     ItemRequest itemRequest;

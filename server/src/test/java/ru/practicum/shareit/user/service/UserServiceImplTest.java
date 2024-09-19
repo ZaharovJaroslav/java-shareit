@@ -1,4 +1,5 @@
 package ru.practicum.shareit.user.service;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
@@ -6,10 +7,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+
+import org.springframework.test.context.ActiveProfiles;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.UpdateUserRequest;
 import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.repository.UserRepository;
+
 import java.util.Collection;
 import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -17,11 +23,16 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 
+@Transactional
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@ActiveProfiles("test")
 class UserServiceImplTest {
+
     private final UserService userService;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
     User user1;
     UpdateUserRequest updateUserRequest;
     UserDto userDto;
