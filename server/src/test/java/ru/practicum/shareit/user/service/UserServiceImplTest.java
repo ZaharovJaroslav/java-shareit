@@ -38,18 +38,26 @@ class UserServiceImplTest {
     UserDto userDto;
     User user2;
     User userNull;
+    UserDto userDtoAllFieldsNull;
+    UserDto userDtoNull;
+    User userAllFieldsNull;
+
 
     @BeforeEach
     void setUp() {
-       user1 = new User(null, "name1", "email@emal.tr1");
-       user2 = new User(null, "name2", "email@emal.tr2");
-       updateUserRequest = new UpdateUserRequest("name_update", "email@emal.tr_update");
+        user1 = new User(null, "name1", "email@emal.tr1");
+        user2 = new User(null, "name2", "email@emal.tr2");
+        updateUserRequest = new UpdateUserRequest("name_update", "email@emal.tr_update");
 
-       userNull = null;
+        userNull = null;
         userDto = UserDto.builder()
                 .name("name userDto1")
                 .email("userDto1@mans.gf")
                 .build();
+
+        userDtoAllFieldsNull = new UserDto();
+        userDtoNull = null;
+        userAllFieldsNull = new User();
     }
 
     @Test
@@ -165,5 +173,29 @@ class UserServiceImplTest {
         userService.deleteUserById(savedUser.getId());
         Collection<User> afterDelete = userService.getAllUsers();
         assertEquals(0, afterDelete.size());
+    }
+
+    @Test
+    void userMapperTest_mapToModel_whenAllIsOk() {
+        User user1 = UserMapper.toUser(userDto);
+        assertEquals(userDto.getId(), user1.getId());
+        assertEquals(userDto.getName(), user1.getName());
+        assertEquals(userDto.getEmail(), user1.getEmail());
+    }
+
+    @Test
+    void userMapperTest_mapToModel_whenAllFieldsAreNull() {
+        User userNull = UserMapper.toUser(userDtoAllFieldsNull);
+        assertEquals(userDtoAllFieldsNull.getId(), userNull.getId());
+        assertEquals(userDtoAllFieldsNull.getName(), userNull.getName());
+        assertEquals(userDtoAllFieldsNull.getEmail(), userNull.getEmail());
+    }
+
+    @Test
+    void userMapperTest_mapToDto_whenAllFieldsAreNull() {
+        UserDto userDtoNull = UserMapper.toUserDto(userAllFieldsNull);
+        assertEquals(userAllFieldsNull.getId(), userDtoNull.getId());
+        assertEquals(userAllFieldsNull.getName(), userDtoNull.getName());
+        assertEquals(userAllFieldsNull.getEmail(), userDtoNull.getEmail());
     }
 }
