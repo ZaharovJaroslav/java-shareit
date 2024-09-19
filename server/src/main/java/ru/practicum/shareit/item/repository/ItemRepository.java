@@ -10,6 +10,7 @@ import java.util.Collection;
 
 public interface ItemRepository extends JpaRepository<Item,Long> {
     Collection<Item> findAllByOwnerId(Long userId);
+
     Collection<Item> findAllByItemRequest(ItemRequest itemRequest);
 
 

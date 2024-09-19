@@ -34,7 +34,7 @@ class UserServiceImplTest {
     @BeforeEach
     void setUp() {
        user1 = new User(null, "name1", "email@emal.tr1");
-       user2 = new User(null ,"name2", "email@emal.tr2");
+       user2 = new User(null, "name2", "email@emal.tr2");
        updateUserRequest = new UpdateUserRequest("name_update", "email@emal.tr_update");
 
        userNull = null;

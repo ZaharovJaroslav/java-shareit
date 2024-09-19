@@ -167,7 +167,7 @@ class ItemServiceTest {
     @Test
     void getItemsByUserId_whenOk_returnItemDtoList() {
         User savedOwnerDto1 = userService.addNewUser(owner1);
-        ItemDto savedItemDto = itemService.addNewItem( savedOwnerDto1.getId(), itemDto1);
+        ItemDto savedItemDto = itemService.addNewItem(savedOwnerDto1.getId(), itemDto1);
         Collection<ItemDto> collection = itemService.getAllItemsUser(savedOwnerDto1.getId());
         List<ItemDto> itemDtos = collection.stream().toList();
 
@@ -200,7 +200,7 @@ class ItemServiceTest {
         assertEquals(savedItemDtoBeforeUpd.getRequestId(), itemDtos.get(0).getRequestId());
         assertEquals(savedItemDtoBeforeUpd.getAvailable(), itemDtos.get(0).getAvailable());
 
-        UpdateItemRequestDto updatedItem =UpdateItemRequestDto.builder()
+        UpdateItemRequestDto updatedItem = UpdateItemRequestDto.builder()
                 .name("new name")
                 .description("new description")
                 .available(true)
@@ -236,9 +236,9 @@ class ItemServiceTest {
         User savedRequester = userService.addNewUser(requester101);
         ItemDto itemDto02 = itemDto1.toBuilder().name("new item").description("new description").build();
 
-        ItemDto savedItemDto02 = itemService.addNewItem(savedOwnerDto1.getId() ,itemDto02);
+        ItemDto savedItemDto02 = itemService.addNewItem(savedOwnerDto1.getId(), itemDto02);
 
-        Collection <ItemDto> collection = itemService.findItemByNameOrDescription("nEw");
+        Collection<ItemDto> collection = itemService.findItemByNameOrDescription("nEw");
         List<ItemDto> itemDtoList = collection.stream().toList();
 
         assertNotNull(itemDtoList);

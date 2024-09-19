@@ -7,9 +7,11 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
+
 import ru.practicum.shareit.exception.NotAvailableException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
+
 import ru.practicum.shareit.item.comment.dto.CommentDto;
 import ru.practicum.shareit.item.comment.mapper.CommentMapper;
 import ru.practicum.shareit.item.comment.model.Comment;
@@ -20,7 +22,6 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.model.UpdateItemRequestDto;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.request.mapper.ItemRequestMapper;
-import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.service.ItemRequestService;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
@@ -48,11 +49,6 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto addNewItem(long userId, ItemDto item) {
         log.debug("addNewItem({}, {})", userId,item);
         itemValidation(item);
-
-     /*   if (item.getRequestId()!= null) {
-            ItemRequest itemRequest =
-        }*/
-
         User user = userService.getUserById(userId);
         Item newItem = ItemMapper.mapToItem(item);
         newItem.setOwnerId(user.getId());

@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
-import ru.practicum.shareit.booking.dto.BookingState;
 
 public class BaseClient {
     protected final RestTemplate rest;

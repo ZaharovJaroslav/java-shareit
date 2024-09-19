@@ -15,7 +15,6 @@ import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.booking.dto.BookingDto;
 
 import ru.practicum.shareit.booking.dto.NewBookingRequestDto;
-import ru.practicum.shareit.exception.NotFoundException;
 
 import java.util.Collection;
 
@@ -33,9 +32,6 @@ public class BookingController {
      public BookingDto addBooking(@RequestHeader("X-Sharer-User-Id") Long userId,
                                   @RequestBody NewBookingRequestDto bookingRequest) {
          log.debug("Добавление нового бронирования");
-         if (bookingRequest == null) {
-            throw new NotFoundException("Новое бронирование не указано");
-         }
          return bookingService.addBooking(userId,bookingRequest);
     }
 

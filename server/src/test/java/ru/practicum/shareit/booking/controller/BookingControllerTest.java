@@ -119,7 +119,7 @@ public class BookingControllerTest {
                 .booker(UserMapper.toUserDto(booker101))
                 .status(BookingStatus.WAITING).build();
 
-        when(bookingService.approve (anyLong(), anyLong(), any()))
+        when(bookingService.approve(anyLong(), anyLong(), any()))
                 .thenReturn(bookingDto1ForResponse);
 
         String result = mockMvc.perform(patch("/bookings/{bookingId}", bookingDto1ForResponse.getId())
@@ -146,7 +146,7 @@ public class BookingControllerTest {
                 .booker(UserMapper.toUserDto(booker101))
                 .status(BookingStatus.WAITING).build();
 
-        when(bookingService.findBookingById (any(), any()))
+        when(bookingService.findBookingById(any(), any()))
                 .thenReturn(bookingDto1ForResponse);
         String result = mockMvc.perform(get("/bookings/{bookingId}", bookingDto1ForResponse.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -197,7 +197,7 @@ public class BookingControllerTest {
                 .booker(UserMapper.toUserDto(booker101))
                 .status(BookingStatus.WAITING).build();
 
-        when(bookingService.findAllBookingsByOwner  (anyLong(), any()))
+        when(bookingService.findAllBookingsByOwner(anyLong(), any()))
                 .thenReturn(List.of(bookingDto1ForResponse));
 
         String result = mockMvc.perform(get("/bookings/owner")
