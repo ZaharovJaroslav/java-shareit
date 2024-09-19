@@ -2,6 +2,8 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.AllArgsConstructor;
 
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
@@ -27,7 +29,8 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 
 @Service
-@AllArgsConstructor
+//@AllArgsConstructor
+@RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final UserService userService;
@@ -109,9 +112,9 @@ public class BookingServiceImpl implements BookingService {
             case FUTURE:
                 return BookingMapper.toBookingDto(bookingRepository.findByBookerIdAndStartIsAfterOrderByStartDesc(userId, now));
             case WAITING:
-                BookingMapper.toBookingDto(bookingRepository.findByBookerIdAndStartIsAfterAndStatusIsOrderByStartDesc(userId, now, BookingStatus.WAITING));
+                return BookingMapper.toBookingDto(bookingRepository.findByBookerIdAndStartIsAfterAndStatusIsOrderByStartDesc(userId, now, BookingStatus.WAITING));
             case REJECTED:
-                BookingMapper.toBookingDto(bookingRepository.findByBookerIdAndStatusIsOrderByStartDesc(userId, BookingStatus.REJECTED));
+                return BookingMapper.toBookingDto(bookingRepository.findByBookerIdAndStatusIsOrderByStartDesc(userId, BookingStatus.REJECTED));
         }
         throw new BadRequestException("Введен некорректный запрос");
     }
@@ -131,9 +134,9 @@ public class BookingServiceImpl implements BookingService {
             case FUTURE:
                 return BookingMapper.toBookingDto(bookingRepository.findFutureBookingsOwner(ownerId, now));
             case WAITING:
-                BookingMapper.toBookingDto(bookingRepository.findWaitingBookingsOwner(ownerId, now, BookingStatus.WAITING));
+               return BookingMapper.toBookingDto(bookingRepository.findWaitingBookingsOwner(ownerId, now, BookingStatus.WAITING));
             case REJECTED:
-                BookingMapper.toBookingDto(bookingRepository.findRejectedBookingsOwner((ownerId), BookingStatus.REJECTED));
+               return BookingMapper.toBookingDto(bookingRepository.findRejectedBookingsOwner((ownerId), BookingStatus.REJECTED));
         }
         throw new BadRequestException("Введен некорректный запрос");
 

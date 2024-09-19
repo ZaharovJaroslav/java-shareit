@@ -16,7 +16,7 @@ import java.util.List;
 
 @Slf4j
 @Data
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class ItemDto {
