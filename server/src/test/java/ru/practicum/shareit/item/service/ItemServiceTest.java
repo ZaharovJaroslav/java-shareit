@@ -9,13 +9,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
+import ru.practicum.shareit.item.comment.mapper.CommentMapper;
+import ru.practicum.shareit.item.comment.model.Comment;
+import ru.practicum.shareit.item.comment.repository.CommentRepository;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.model.UpdateItemRequestDto;
+
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.service.ItemRequestService;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -23,6 +31,8 @@ import ru.practicum.shareit.user.service.UserService;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -32,6 +42,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 class ItemServiceTest {
+    private final CommentRepository commentRepository;
+    private final ItemRequestService itemRequestService;
+    private final BookingRepository bookingRepository;
     private final ItemService itemService;
     private final UserService userService;
     private final EntityManager em;
@@ -51,6 +64,8 @@ class ItemServiceTest {
     ItemDto itemDto1;
     ItemRequestDto itemRequestDto1;
     CommentDto commentDto;
+
+    Booking bookingFromBd;
     TypedQuery<Item> query;
 
     @BeforeEach
@@ -161,10 +176,18 @@ class ItemServiceTest {
         assertEquals(savedItemDto.getName(), afterSave.get(0).getName());
     }
 
-   @Test
+    @Test
+    void addItemRequest_whenRequesterIdIsNull_returnNotFoundRecordInBD() {
+        Long requesterId = 1001L;
+        assertThrows(NotFoundException.class,
+                () -> itemRequestService.addNewItemRequest(itemRequestDto1, requesterId));
+    }
+
+    @Test
     void addItem_whenUserNotFound_returnNotFoundException() {
         assertThrows(NotFoundException.class, () -> itemService.addNewItem(10000L, itemDto1));
     }
+
 
     @Test
     void getItemsByUserId_whenOk_returnItemDtoList() {
@@ -248,4 +271,46 @@ class ItemServiceTest {
         assertEquals(itemDto02.getDescription(), itemDtoList.stream().findFirst().get().getDescription());
     }
 
+    @Test
+    void commentToDto_whenCommentIsOk_returnCommentDto() {
+        Comment comment = Comment.builder()
+                .id(0L)
+                .author(booker)
+                .created(now)
+                .text("comment")
+                .item(item1).build();
+        CommentDto commentDto1 = CommentMapper.toDto(comment);
+        assertEquals(comment.getId(), commentDto1.getId());
+        assertEquals(comment.getText(), commentDto1.getText());
+        assertEquals(comment.getAuthor().getName(), commentDto1.getAuthorName());
+        assertEquals(comment.getCreated(), commentDto1.getCreated());
+    }
+
+    @Test
+    void saveComment_whenUserNotFound_thenReturnNotFoundRecordInBD() {
+        CommentDto commentDto = CommentDto.builder()
+                .id(1L)
+                .text("comment 1")
+                .authorName("name user for test 2")
+                .created(now.minusDays(5))
+                .build();
+
+        assertThrows(NotFoundException.class, () -> itemService.addComment(1000L, 1L, commentDto));
+    }
+
+    @Test
+    void saveComment_whenItemNotFound_thenReturnNotFoundRecordInDb() {
+        User savedUser1 = userService.addNewUser(owner1);
+        User savedUser2 = userService.addNewUser(userForTest);
+        CommentDto commentDto = CommentDto.builder()
+                .authorName(savedUser2.getName())
+                .authorName("comment from user 1")
+                .created(now)
+                .build();
+        Long notFoundItemId = 1001L;
+        //Пользователь не арендовал эту вещь.
+        NotFoundException ex = assertThrows(NotFoundException.class,
+                () -> itemService.addComment(notFoundItemId, savedUser1.getId(), commentDto));
+        assertEquals("Инструмента id = 1001не существует", ex.getMessage());
+    }
 }

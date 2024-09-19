@@ -90,6 +90,8 @@ class ItemRequestServiceTest {
                 .build();
     }
 
+
+
     @Test
     void addItemRequest() {
         //Before save.
@@ -147,7 +149,6 @@ class ItemRequestServiceTest {
                 () -> itemRequestService.findUserRequests(requesterId));
         assertEquals(("Пользователя с таким id не существует"), ex.getMessage());
     }
-
 
     @Test
     void getAllRequestForSee_whenRequesterNotFound_returnNotFoundRecordInDb() {

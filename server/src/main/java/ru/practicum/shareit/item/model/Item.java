@@ -53,6 +53,5 @@ public class Item {
     @JoinColumn(name = "request_id")
     private ItemRequest itemRequest;
 
-
 }
 

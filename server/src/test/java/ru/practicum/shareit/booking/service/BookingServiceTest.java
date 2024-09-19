@@ -10,6 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.NewBookingRequestDto;
+import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -212,8 +213,6 @@ class BookingServiceTest {
         assertEquals(newBookingRequestDto.getStart(), savedBookingForResponse.getStart());
         assertEquals(newBookingRequestDto.getEnd(), savedBookingForResponse.getEnd());
         assertEquals(newBookingRequestDto.getItemId(), savedBookingForResponse.getItem().getId());
-
-
     }
 
     @Test
@@ -441,5 +440,17 @@ class BookingServiceTest {
         assertEquals(rejectedBooking.getStart(), result.get(0).getStart());
         assertEquals(rejectedBooking.getEnd(), result.get(0).getEnd());
         assertEquals(rejectedBooking.getStatus(), result.get(0).getStatus());
+    }
+
+    @Test
+    void booking_to_BookingDto_wheAllIsOk_returnBookingDto() {
+        BookingDto bookingDto = BookingMapper.toBookingDto(booking);
+        assertEquals(booking.getItem().getId(), bookingDto.getId());
+        assertEquals(booking.getId(), bookingDto.getId());
+        assertEquals(booking.getStart(), bookingDto.getStart());
+        assertEquals(booking.getEnd(), bookingDto.getEnd());
+        assertEquals(booking.getBooker().getName(), bookingDto.getBooker().getName());
+        assertEquals(booking.getBooker().getId(), bookingDto.getBooker().getId());
+        assertEquals(booking.getStatus(), bookingDto.getStatus());
     }
 }

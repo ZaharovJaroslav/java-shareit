@@ -102,6 +102,8 @@ class ItemServiceImplTest {
         when(userRepositoryJpa2.findById(any())).thenReturn(Optional.of(userForTest2));
         when(itemRepositoryJpa2.findById(any())).thenReturn(Optional.of(itemFromBd));
         when(commentRepository2.save(any())).thenReturn(outputComment);
+
+
     }
 
 }
