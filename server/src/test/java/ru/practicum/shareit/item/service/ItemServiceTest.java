@@ -33,6 +33,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Optional;
 
 
@@ -71,6 +72,7 @@ class ItemServiceTest {
     ItemDto itemDto1;
     ItemRequestDto itemRequestDto1;
     CommentDto commentDto;
+    UpdateItemRequestDto updateItemRequestDto;
 
     Booking bookingFromBd;
     TypedQuery<Item> query;
@@ -137,6 +139,12 @@ class ItemServiceTest {
                 .build();
 
         itemDto1 = ItemDto.builder()
+                .name(item1.getName())
+                .description(item1.getDescription())
+                .available(item1.getAvailable())
+                .build();
+
+        updateItemRequestDto = UpdateItemRequestDto.builder()
                 .name(item1.getName())
                 .description(item1.getDescription())
                 .available(item1.getAvailable())
