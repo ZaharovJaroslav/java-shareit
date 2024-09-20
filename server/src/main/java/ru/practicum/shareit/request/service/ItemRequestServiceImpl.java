@@ -49,7 +49,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public Collection<ItemRequestDto> findRequests(Long userId) {
             userService.getUserById(userId);
-            //Pageable page = PageRequest.of(from / size, size, Sort.by("created"));
             Collection<ItemRequestDto> list = new ArrayList<>();
         Collection<ItemRequest> findAllByRequesterIdIsNot = itemRequestRepository.findByCreatorIdIsNot(userId);
             findAllByRequesterIdIsNot.forEach(itemRequest -> {

@@ -38,30 +38,4 @@ public class ItemRequestMapper {
                 .build();
     }
 
-
-
-
-  /*  public static ItemRequest toItemRequest(ItemRequestDto itemRequestDto) {
-        return ItemRequest.builder()
-                .description(itemRequestDto.getDescription())
-                .creator(itemRequestDto.getRequestor())
-                .created(itemRequestDto.getCreated())
-                .build();
-    }
-
-    public static ItemRequestDto toItemRequestDto(ItemRequest itemRequest) {
-        return ItemRequestDto.builder()
-                .description(itemRequest.getDescription())
-                .requestor(itemRequest.getCreator())
-                .created(itemRequest.getCreated())
-                .build();
-    }
-
-    public static ResponseItemRequestDto toResponseItemRequestDto(ItemRequest itemRequest) {
-        return ResponseItemRequestDto.builder()
-                .id(itemRequest.getId())
-                .description(itemRequest.getDescription())
-                .created(itemRequest.getCreated())
-                .build();
-    }*/
 }

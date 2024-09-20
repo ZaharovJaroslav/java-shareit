@@ -12,7 +12,7 @@ import java.util.Collection;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-class ItemRepositoryJpaTest {
+class ItemRepositoryTest {
     @Autowired
     ItemRepository itemRepository;
     @Autowired

@@ -453,4 +453,5 @@ class BookingServiceTest {
         assertEquals(booking.getBooker().getId(), bookingDto.getBooker().getId());
         assertEquals(booking.getStatus(), bookingDto.getStatus());
     }
+
 }
