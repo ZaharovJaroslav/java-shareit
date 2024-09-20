@@ -45,6 +45,7 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRequestService itemRequestService;
 
 
+
     @Override
     public ItemDto addNewItem(long userId, ItemDto item) {
         log.debug("addNewItem({}, {})", userId,item);
@@ -170,7 +171,7 @@ public class ItemServiceImpl implements ItemService {
         List<Booking> bookings = bookingRepository
                 .findByItemIdAndBookerIdAndStatusIsAndEndIsBefore(itemId, userId, BookingStatus.APPROVED, LocalDateTime.now());
         log.info(bookings.toString());
-        if (!bookings.isEmpty() && !bookings.get(0).getStart().isBefore(LocalDateTime.now())) {
+        if (!bookings.isEmpty() && bookings.get(0).getStart().isBefore(LocalDateTime.now())) {
             Comment comment = CommentMapper.toComment(commentDto);
             comment.setItem(item);
             comment.setAuthor(user);

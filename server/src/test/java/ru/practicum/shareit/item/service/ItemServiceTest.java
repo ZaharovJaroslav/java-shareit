@@ -21,7 +21,9 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.model.UpdateItemRequestDto;
 
+import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.mapper.ItemRequestMapper;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.service.ItemRequestService;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -29,11 +31,17 @@ import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 
 @Transactional
@@ -313,4 +321,81 @@ class ItemServiceTest {
                 () -> itemService.addComment(notFoundItemId, savedUser1.getId(), commentDto));
         assertEquals("Инструмента id = 1001не существует", ex.getMessage());
     }
+
+    @Test
+    void saveComment_whenAllAreOk_thenReturnComment() {
+        CommentDto inputCommentDto = CommentDto.builder().id(1L).text("new comment for test").build();
+
+        User owner2 = User.builder()
+                .id(2L)
+                .name("name for owner")
+                .email("owner2@aadmf.wreew")
+                .build();
+
+        User userForTest2 = User.builder()
+                .id(1L)
+                .name("name user for test 2")
+                .email("userForTest2@ahd.ew")
+                .build();
+
+        Item zaglushka = Item.builder().id(1L).name("zaglushka").description("desc item zaglushka")
+                .ownerId(owner2.getId()).build();
+
+        Booking bookingFromBd = Booking.builder()
+                .id(1L)
+                .item(zaglushka)
+                .booker(userForTest2)
+                .start(now.minusDays(10))
+                .end(now.minusDays(5))
+                .build();///
+        List<Booking> list = new ArrayList<>();
+        list.add(bookingFromBd);
+
+        Item itemFromBd = Item.builder()
+                .id(1L)
+                .name("name for item")
+                .description("desc for item")
+                .ownerId(owner2.getId())
+                .available(true)
+                .build();///
+
+        CommentDto commentDto = CommentDto.builder()
+                .id(1L)
+                .text("comment 1")
+                .authorName("name user for test 2")
+                .created(now.minusDays(5))
+                .build();
+
+        Comment outputComment = Comment.builder()
+                .id(1L)
+                .author(userForTest2)
+                .text("comment 1")
+                .item(itemFromBd)
+                .build();
+
+        UserService userService1 = mock(UserService.class);
+        ItemRepository itemRepository = mock(ItemRepository.class);
+        CommentRepository commentRepository2 = mock(CommentRepository.class);
+        BookingRepository bookingRepository2 = mock(BookingRepository.class);
+        ItemRequestService itemRequestService = mock(ItemRequestService.class);
+
+        ItemService itemService2 = new ItemServiceImpl(itemRepository, userService1, bookingRepository2,commentRepository2,itemRequestService);
+
+        when(userService1.getUserById(anyLong()))
+                .thenReturn(userForTest2);
+        when(itemRepository.findById(anyLong()))
+                .thenReturn(Optional.of(itemFromBd));
+        when(commentRepository2.save(any()))
+                .thenReturn(outputComment);
+        when(bookingRepository2.findByItemIdAndBookerIdAndStatusIsAndEndIsBefore(any(),any(),any(),any())).thenReturn(list);
+
+        CommentDto outputCommentDto =
+                itemService2.addComment(itemFromBd.getId(), userForTest2.getId(), inputCommentDto);
+
+        assertEquals(commentDto.getText(), outputCommentDto.getText());
+        assertEquals(commentDto.getAuthorName(), outputCommentDto.getAuthorName());
+        assertEquals(commentDto.getId(), outputCommentDto.getId());
+        assertNotEquals(commentDto.getCreated(), outputCommentDto.getCreated());
+    }
+
 }
