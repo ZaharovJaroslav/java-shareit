@@ -47,12 +47,4 @@ public class UserController {
                                              @PathVariable("id") Long userId) {
         return userClient.updateUser(userDto, userId);
     }
-
-
-
 }
-
-
-
-
-

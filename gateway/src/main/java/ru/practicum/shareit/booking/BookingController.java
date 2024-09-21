@@ -30,7 +30,8 @@ public class BookingController {
 
 	@GetMapping
 	public ResponseEntity<Object> findAllByUserId(@RequestHeader("X-Sharer-User-Id") Long userId,
-											  @RequestParam(name = "state", defaultValue = "all") String stateParam) {
+											      @RequestParam(name = "state", defaultValue = "all")
+												  String stateParam) {
 		BookingState state = BookingState.from(stateParam)
 				.orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
 		return bookingClient.findAllByUserId(userId, state);
@@ -38,14 +39,14 @@ public class BookingController {
 
 	@PostMapping
 	public ResponseEntity<Object> addBooking(@RequestHeader("X-Sharer-User-Id") Long userId,
-										 @RequestBody @Valid BookItemRequestDto requestDto) {
+										     @RequestBody @Valid BookItemRequestDto requestDto) {
 		log.info("Creating booking {}, userId={}", requestDto, userId);
 		return bookingClient.addBooking(userId, requestDto);
 	}
 
 	@GetMapping("/{bookingId}")
 	public ResponseEntity<Object> findById(@RequestHeader("X-Sharer-User-Id") Long userId,
-											 @PathVariable Long bookingId) {
+										   @PathVariable Long bookingId) {
 		log.info("Get booking {}, userId={}", bookingId, userId);
 		return bookingClient.findById(userId, bookingId);
 	}
@@ -61,7 +62,7 @@ public class BookingController {
 
 	@GetMapping("/owner")
 	public ResponseEntity<Object> findAllByOwnerId(@RequestHeader("X-Sharer-User-Id") Long userId,
-			                                            @RequestParam(defaultValue = "ALL") String state) {
+												   @RequestParam(defaultValue = "ALL") String state) {
 		BookingState stateParam = BookingState.from(state)
 				.orElseThrow(() -> new BadRequestException("Unknown state: " + state));
 		return bookingClient.findAllByOwnerId(userId, stateParam);
